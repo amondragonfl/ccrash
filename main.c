@@ -3,17 +3,20 @@
 #include <errno.h>
 #include <time.h>
 #include <math.h>
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <stdbool.h>
 
 double *get_double(char *prompt, double *doubleptr);
 int msleep(long msec);
 double generate_crash_num();
 void display_game(double mult, double win, double balance, int crash, int cashout);
 double truncate(double num, int dp);
-int double_compare(double a, double b);
+bool double_compare(double a, double b);
+bool keyhit();
 
 int main(void)
 {
-    srand(time(0));
     return 0;
 }
 
@@ -100,11 +103,29 @@ double truncate(double num, int dp)
     return floor(num * pow(10, dp)) / pow(10, dp);
 }
 
-int double_compare(double a, double b)
+bool double_compare(double a, double b)
 {
-    if (fabs(a-b) < 1e-9)
+    if (fabs(a - b) < 1e-9)
     {
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
+}
+
+bool keyhit()
+{
+    struct termios term;
+    tcgetattr(0, &term);
+
+    /* Disable line buffering in stdin */
+    struct termios term2 = term;
+    term2.c_lflag &= ~ICANON;
+    tcsetattr(0, TCSANOW, &term2);
+
+    int byteswaiting;
+    ioctl(0, FIONREAD, &byteswaiting);
+
+    /*Revert changes to avoid leaving terminal in weird state*/
+    tcsetattr(0, TCSANOW, &term);
+    return byteswaiting>0;
 }
