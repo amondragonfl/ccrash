@@ -17,6 +17,56 @@ bool keyhit();
 
 int main(void)
 {
+    double balance = 100.00;
+    double multiplier = 0.00;
+    double currentwin = 0.00;
+    bool cashout = false;
+    bool crash = false;
+    double betamount;
+    double crashnum;
+
+    srand(time(0));
+    while (truncate(balance, 2) > 0.00)
+    {
+        printf("\e[1;1H\e[2J");
+        display_game(multiplier, currentwin, balance, crash, cashout);
+        multiplier = 0.00;
+        currentwin = 0.00;
+        cashout = false;
+        crash = false;
+        do
+        {
+            if (!get_double("bet amount: ", &betamount))
+            {
+                return 1;
+            }
+        } while (betamount < 0.01 || betamount > balance);
+        balance -= truncate(betamount, 2);
+        multiplier += 1;
+        crashnum = truncate(generate_crash_num(), 2);
+        while (!double_compare(multiplier, crashnum))
+        {
+            printf("\e[1;1H\e[2J");
+            display_game(multiplier, currentwin, balance, crash, cashout);
+            multiplier += 0.01;
+            currentwin = betamount * multiplier;
+            if (!cashout)
+            {
+                printf("Press any [\033[0;32mKEY\033[0m] to cashout");
+                fflush(stdout);
+            }
+            if (keyhit() && !cashout)
+            {
+                balance += currentwin;
+                cashout = true;
+            }
+            msleep(90);
+        }
+        crash = true;
+    }
+    printf("\e[1;1H\e[2J");
+    display_game(multiplier, currentwin, balance, crash, cashout);
+    printf("Game Over!\n");
     return 0;
 }
 
@@ -125,7 +175,8 @@ bool keyhit()
     int byteswaiting;
     ioctl(0, FIONREAD, &byteswaiting);
 
-    for (int i = 0; i<byteswaiting; i++){
+    for (int i = 0; i < byteswaiting; i++)
+    {
         getchar();
     }
     /*Revert changes to avoid leaving terminal in weird state*/
