@@ -125,7 +125,10 @@ bool keyhit()
     int byteswaiting;
     ioctl(0, FIONREAD, &byteswaiting);
 
+    for (int i = 0; i<byteswaiting; i++){
+        getchar();
+    }
     /*Revert changes to avoid leaving terminal in weird state*/
     tcsetattr(0, TCSANOW, &term);
-    return byteswaiting>0;
+    return byteswaiting > 0;
 }
