@@ -6,6 +6,7 @@
 double *get_double(char *prompt, double *doubleptr);
 int msleep(long msec);
 double generate_crash_num();
+void display_game(double mult, double win, double balance, int crash, int cashout);
 
 int main(void)
 {
@@ -68,4 +69,25 @@ double generate_crash_num()
     }
     double zero_to_one = (double)rand() / (double)RAND_MAX;
     return 0.1 + .99 / (zero_to_one);
+}
+
+void display_game(double mult, double win, double balance, int crash, int cashout)
+{
+    if (crash)
+    {
+        printf("multiplier:  \033[0;31m%.2lfx\033[0m\n", mult);
+    }
+    else
+    {
+        printf("multiplier:  %.2lfx\n", mult);
+    }
+    if (!cashout && !crash)
+    {
+        printf("current win: \033[0;32m%.2lf$\033[0m\n", win);
+    }
+    else
+    {
+        printf("current win:\n");
+    }
+    printf("\nbalance: %.2lf$\n", balance);
 }
