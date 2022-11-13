@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <time.h>
 
 double *get_double(char *prompt, double *doubleptr);
+int msleep(long msec);
 
 int main(void)
-{
+{   
     return 0;
 }
 
@@ -35,4 +37,22 @@ double *get_double(char *prompt, double *doubleptr)
     } while (!success);
     *doubleptr = num;
     return doubleptr;
+}
+
+int msleep(long milliseconds)
+{
+    struct timespec delay;
+    int res;
+    if (milliseconds < 0)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+    delay.tv_sec = milliseconds / 1000;
+    delay.tv_nsec = (milliseconds % 1000) * 1000000;
+    do
+    {
+        res = nanosleep(&delay, &delay);
+    } while (res && errno == EINTR);
+    return res;
 }
