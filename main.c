@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
+#include <math.h>
 
 double *get_double(char *prompt, double *doubleptr);
 int msleep(long msec);
 double generate_crash_num();
 void display_game(double mult, double win, double balance, int crash, int cashout);
+double truncate(double num, int dp);
 
 int main(void)
 {
@@ -90,4 +92,9 @@ void display_game(double mult, double win, double balance, int crash, int cashou
         printf("current win:\n");
     }
     printf("\nbalance: %.2lf$\n", balance);
+}
+
+double truncate(double num, int dp)
+{
+    return floor(num * pow(10, dp)) / pow(10, dp);
 }
