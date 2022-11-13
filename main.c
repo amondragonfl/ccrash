@@ -5,9 +5,11 @@
 
 double *get_double(char *prompt, double *doubleptr);
 int msleep(long msec);
+double generate_crash_num();
 
 int main(void)
-{   
+{
+    srand(time(0));
     return 0;
 }
 
@@ -55,4 +57,15 @@ int msleep(long milliseconds)
         res = nanosleep(&delay, &delay);
     } while (res && errno == EINTR);
     return res;
+}
+
+double generate_crash_num()
+{
+    /* NOTE: seed needs to be set outside the function */
+    if (rand() % 33 == 0)
+    {
+        return 1;
+    }
+    double zero_to_one = (double)rand() / (double)RAND_MAX;
+    return 0.1 + .99 / (zero_to_one);
 }
