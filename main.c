@@ -9,6 +9,7 @@ int msleep(long msec);
 double generate_crash_num();
 void display_game(double mult, double win, double balance, int crash, int cashout);
 double truncate(double num, int dp);
+int double_compare(double a, double b);
 
 int main(void)
 {
@@ -97,4 +98,13 @@ void display_game(double mult, double win, double balance, int crash, int cashou
 double truncate(double num, int dp)
 {
     return floor(num * pow(10, dp)) / pow(10, dp);
+}
+
+int double_compare(double a, double b)
+{
+    if (fabs(a-b) < 1e-9)
+    {
+        return 1;
+    }
+    return 0;
 }
