@@ -28,7 +28,7 @@ int main(void)
     srand(time(0));
     while (truncate(balance, 2) > 0.00)
     {
-        system("clear");
+        printf("\e[1;1H\e[2J");
         display_game(multiplier, currentwin, balance, crash, cashout);
         multiplier = 0.00;
         currentwin = 0.00;
@@ -46,7 +46,7 @@ int main(void)
         crashnum = truncate(generate_crash_num(), 2);
         while (!double_compare(multiplier, crashnum))
         {
-            system("clear");
+            printf("\e[1;1H\e[2J");
             display_game(multiplier, currentwin, balance, crash, cashout);
             multiplier += 0.01;
             currentwin = betamount * multiplier;
@@ -64,7 +64,7 @@ int main(void)
         }
         crash = true;
     }
-    system("clear");
+    printf("\e[1;1H\e[2J");
     display_game(multiplier, currentwin, balance, crash, cashout);
     printf("Game Over!\n");
     return 0;
